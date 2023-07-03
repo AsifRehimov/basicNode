@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>İstifadəçi Siyahısı</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>ad</th>
+            <th>soyad</th>
+            <th>login</th>
+            <th>password</th>
+            <th>delete</th>
+        </tr>
+        <% result.map((item, index) =>{ %>
+        <tr class="row-click" key="<%= index %>">
+            <td><%= item.id %></td>
+            <td><%= item.name %></td>
+            <td><%= item.surname %></td>
+            <td><%= item.login %></td>
+            <td><%= item.password %></td>
+            <td><button class="delete bg-danger">Sil</button></td>
+        </tr>
+        <% }) %>
+    </table>
+    <p id="write"></p>
+    <button class="create">Yeni istiadəçi əlavə et</button>
+
+    <script>
+      $(document).ready(function() {
+        $('.create').click(function(){
+          window.location.href = '/create_user'
+        })
+        $('.delete').click(function() {
+          var clickedTd = $(this);
+          var parentTr = clickedTd.closest('tr');
+    
+          var rowData = [];
+          parentTr.find('td').each(function() {
+            rowData.push($(this).text());
+          });
+          $.ajax({
+            type: 'DELETE',
+            url: '/delete' + rowData[0],
+            success: function (response) {
+              window.location.replace("/") 
+            },
+            error: function (xhr, status, error) {
+              console.error(error, "error?");
+            }
+          });
+   
+        });
+      });
+
+    </script>
+</body>
+
+</html>
